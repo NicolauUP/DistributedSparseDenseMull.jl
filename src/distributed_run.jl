@@ -2,9 +2,28 @@ using Distributed
 using LinearAlgebra
 using SparseArrays
 using Printf
+using ClusterManagers
 
 
-addprocs(4) 
+#Detect Slurm environment and add workers accordingly
+if "SLURM_NTASKS" in keys(ENV)
+    total_tasks = parse(Int, ENV["SLURM_NTASKS"])
+
+    #On a single node, you can use addprocs locally
+
+    n_workers = max(1, total_tasks - 1) # Reserve 1 for master
+
+    println("Detected SLURM environment with $total_tasks tasks. Adding $n_workers local workers.")
+
+
+    addprocs(SlurmManager(n_workers))
+else
+    println("Master: No SLURM environment detected. Adding 4 local workers for testing.")
+    addprocs(4)
+end
+
+
+
 
 println("Cluster Active: 1 Master + $(nworkers()) workers.")
 
