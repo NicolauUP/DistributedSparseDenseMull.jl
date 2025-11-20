@@ -2,7 +2,7 @@
 #SBATCH --job-name=SpMM-test_9cores
 #SBATCH --nodes=1
 #SBATCH --time=00:10:00
-#SBATCH --ntasks=9
+#SBATCH --ntasks=32
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=1850M
 #SBATCH -A f202409396cpcaa2x
