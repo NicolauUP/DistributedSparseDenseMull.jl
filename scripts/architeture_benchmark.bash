@@ -25,7 +25,7 @@ for WORKERS in 8 16 32 64; do
 #SBATCH -A f202409396cpcaa2x   
 #SBATCH --mem=60G
 
-julia --project=../. ../src/architeture_benchmark.jl 
+julia --project=../. ../src/bench_distributed_run.jl 
 EOT
 
 done
@@ -54,7 +54,7 @@ submit_hybrid_benchmark() {
 #SBATCH --mem=60G
 
 export SLURM_CPUS_PER_TASK=${THREADS}
-julia --project=../. ../src/architeture_benchmark.jl 
+julia --project=../. ../src/bench_distributed_run.jl 
 EOT
 }
 
