@@ -121,7 +121,8 @@ avg_comp = mean(local_times)
 imbalance_pct = ((max_comp / min_comp) -1.0) * 100.0
 # ---  Save Results --- #
 arch = get(ENV, "ARCH_NAME", "Unknown")
-result_line = "$arch, $N, $n_workers, $threads_per_worker, $(round(elapsed_time, digits=4)), $(round(gflops, digits=2)), $(round(t_setup_h,digits=4)), $(round(t_setup_x,digits=4)),$(round(t_gather, digits=4)),$(round(min_comp, digits=4)), $(round(max_comp, digits=4)), $(round(imbalance_pct, digits=2)) \n"
+nodes = get(ENV, "BENCH_NODES", "1")
+result_line = "$arch, $N, $n_workers, $nodes, $threads_per_worker, $(round(elapsed_time, digits=4)), $(round(gflops, digits=2)), $(round(t_setup_h,digits=4)), $(round(t_setup_x,digits=4)),$(round(t_gather, digits=4)),$(round(min_comp, digits=4)), $(round(max_comp, digits=4)), $(round(imbalance_pct, digits=2)) \n"
 
 println("\nFinal Results: $result_line")
 
