@@ -3,7 +3,7 @@ using LinearAlgebra
 using SparseArrays
 using Printf
 using SlurmClusterManager
-
+using Statistics
 
 # --- Configuration ---
 N = parse(Int, get(ENV, "BENCH_N", "50000")) # Size of the Hamiltonian matrix
