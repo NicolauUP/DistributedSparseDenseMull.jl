@@ -95,7 +95,7 @@ function worker_get_diagonal()
     sizehint!(local_diag, length(col_range))
 
     for (local_col_idx, global_col_idx) in enumerate(col_range)
-        val = Y_slab[global_col_idx, local_cold_idx]
+        val = Y_slab[global_col_idx, local_col_idx]
         push!(local_diag, val)
     end
 
