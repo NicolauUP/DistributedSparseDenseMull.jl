@@ -112,7 +112,7 @@ gflops = (2.0 * nnz_H*N) / (elapsed_time* 1e9)
 
 # ---  Save Results --- #
 arch = get(ENV, "ARCH_NAME", "Unknown")
-result_line = "$arch, $N, $n_workers, $threads_per_worker, $(round(time, digits=4)), $(round(gflops, digits=2))\n"
+result_line = "$arch, $N, $n_workers, $threads_per_worker, $(round(elapsed_time, digits=4)), $(round(gflops, digits=2))\n"
 
 println("\nFinal Results: $result_line")
 
