@@ -2,7 +2,9 @@ using LinearAlgebra
 using SparseArrays
 using Distributed
 
-BLAS.set_num_threads(1) # Ensure single-threaded BLAS on each worker
+
+const WORKER_THREADS = haskey(ENV, "JULIA_WORKER_THREADS") ? parse(Int, ENV["JULIA_WORKER_THREADS"]) : 1 
+BLAS.set_num_threads(WORKER_THREADS) # Ensure single-threaded BLAS on each worker
 
 
 
@@ -22,7 +24,7 @@ end
 
 function worker_check_storage()
     keys_list = keys(WORKER_STORAGE)
-    println("Worker storage contains $(length(keys_list)) items:")
+    #println("Worker storage contains $(length(keys_list)) items:")
     return nothing
 end
 
@@ -40,7 +42,7 @@ function worker_init_H(H::SparseMatrixCSC)
 
     GC.gc()
 
-    println("Initialized H matrix on worker with size: $(size(H))")
+    #println("Initialized H matrix on worker with size: $(size(H))")
     return nothing
 end
 
@@ -66,7 +68,7 @@ function worker_allocate_slabs(N::Int, col_range::UnitRange{Int})
 
     # Report memory usage for debugging
     mem_mb = (sizeof(X_slab) + sizeof(Y_slab)) / (1024^2)
-    println("Worker $(myid): Allocated slabsfor columns $(col_range), total size: $(round(mem_mb, digits=2)) MB")
+    #println("Worker $(myid): Allocated slabsfor columns $(col_range), total size: $(round(mem_mb, digits=2)) MB")
 
     return nothing
 end
@@ -92,7 +94,7 @@ function worker_get_diagonal()
     local_diag = Float64[]
     sizehint!(local_diag, length(col_range))
 
-    for (local_cold_idx, global_col_idx) in enumerate(col_range)
+    for (local_col_idx, global_col_idx) in enumerate(col_range)
         val = Y_slab[global_col_idx, local_cold_idx]
         push!(local_diag, val)
     end

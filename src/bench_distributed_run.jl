@@ -24,6 +24,10 @@ end
 n_workers = nworkers()
 println("BENCHMARK : N = $N, Workers = $n_workers, Threads per worker = $threads_per_worker")
 
+@everywhere worker() begin
+    ENV["JULIA_WORKER_THREADS"] = $threads_per_worker
+end
+
 @everywhere begin
     using LinearAlgebra
     using SparseArrays
@@ -62,7 +66,13 @@ end
 
 println("Master: Slabs distributed to all workers.")
 
-# --- Warm
+# --- Warmup ---
+println("\nMaster: Starting warmup matrix-vector multiplication...")
+
+wait([remotecall(worker_matmul, pid) for pid in workers_list])
+
+# -- - Benchmark Distributed Matrix-Vector Multiplication --- #
+
 
 println("\nMaster: Starting distributed matrix-vector multiplication...")
 
@@ -92,6 +102,21 @@ full_diagonal = reduce(vcat, diagonal_results)
 
 println("Master: Gathered full diagonal of result matrix with length $(length(full_diagonal)).")
 println("Master: Distributed computation finished successfully.")
+
+time = t_end - t_start
+@printf("Distributed MatMul Time: %.4f seconds\n", time)
+gflops = (2.0 * N^2) / (time * 1e9)
+@printf("Performance: %.2f GFLOPS\n", gflops)
+
+# ---  Save Results --- #
+arch = get(ENV, "ARCH_NAME", "Unknown")
+result_line = "$arch, $N, $n_workers, $threads_per_worker, $(round(time, digits=4)), $(round(gflops, digits=2))\n"
+
+println("\nFinal Results: $result_line")
+
+open("distributed_benchmark_results.csv", "a") do io
+    write(io, result_line)
+end
 
 # --- Clean Up Workers --- #
 println("\nMaster: Cleaning up worker storage...")
