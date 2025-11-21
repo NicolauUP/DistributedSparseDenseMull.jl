@@ -69,7 +69,7 @@ println("Master: Slabs distributed to all workers.")
 # --- Warmup ---
 println("\nMaster: Starting warmup matrix-vector multiplication...")
 
-wait([remotecall(worker_matmul, pid) for pid in workers_list])
+wait.([remotecall(worker_matmul, pid) for pid in workers_list])
 
 # -- - Benchmark Distributed Matrix-Vector Multiplication --- #
 
