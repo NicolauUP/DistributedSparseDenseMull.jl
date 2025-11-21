@@ -92,7 +92,7 @@ println("Master: Waiting for results from workers...")
 wait.(futures)
 
 t_end = time()
-println("Master: Distributed matrix-vector multiplication completed in $(round(t_end - t_start, digits=2)) seconds.")
+
 
 println("\nMaster: Gathering results from workers...")
 
@@ -116,7 +116,7 @@ result_line = "$arch, $N, $n_workers, $threads_per_worker, $(round(elapsed_time,
 
 println("\nFinal Results: $result_line")
 
-open("distributed_benchmark_results.csv", "a") do io
+open("../results/architecture_benchmark_results.csv", "a") do io
     write(io, result_line)
 end
 
