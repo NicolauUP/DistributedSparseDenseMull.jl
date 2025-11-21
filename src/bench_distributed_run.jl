@@ -40,12 +40,13 @@ end
 
 println("Master: Generating sparse Hamiltonian matrix H of size $(N)x$(N)...")
 H_master = sprand(N, N, 0.01)
-H_master = H_master + H_master'  # Make it symmetric
-
-
+H_master = H_master +
+ H_master'  # Make it symmetric
 nnz_H = nnz(H_master)
+
+
 println("Master: Distributing H matrix to workers...")
-@everywhere procs() worker_init_H($H_master)
+t_setup_h = @elapsed @everywhere procs() worker_init_H($H_master)
 
 println("Master: H matrix distributed to all workers.")
 
@@ -56,7 +57,8 @@ workers_list = workers()
 num_workers = length(workers_list)
 slab_size = div(N, num_workers)
 
-for (i,pid) in enumerate(workers_list)
+t_setup_x = @elapsed begin
+    for (i,pid) in enumerate(workers_list)
 
     start_idx = 1 + (i - 1) * slab_size
     #Ensure the last worker gets any remaining rows
@@ -65,6 +67,7 @@ for (i,pid) in enumerate(workers_list)
     col_range = start_idx:end_idx 
     remotecall_wait(worker_allocate_slabs, pid, N, col_range)
 end 
+end
 
 println("Master: Slabs distributed to all workers.")
 
@@ -85,6 +88,7 @@ for pid in workers_list
     f = remotecall(worker_matmul, pid)
     push!(futures, f)
 end
+local_times = fetch.(futures)
 
 println("Master: Waiting for results from workers...")
 
@@ -97,10 +101,11 @@ t_end = time()
 println("\nMaster: Gathering results from workers...")
 
 # Diagonals from the workes, for example!
+t_gather = @elapsed begin
 diag_futures = [remotecall(worker_get_diagonal, pid) for pid in workers_list]
 diagonal_results = fetch.(diag_futures)
-
 full_diagonal = reduce(vcat, diagonal_results)
+end
 
 println("Master: Gathered full diagonal of result matrix with length $(length(full_diagonal)).")
 println("Master: Distributed computation finished successfully.")
@@ -110,9 +115,13 @@ elapsed_time = t_end - t_start
 gflops = (2.0 * nnz_H*N) / (elapsed_time* 1e9)
 @printf("Performance: %.2f GFLOPS\n", gflops)
 
+min_comp = minimum(local_times)
+max_comp = maximum(local_times)
+avg_comp = mean(local_times)
+imbalance_pct = ((max_comp / min_comp) -1.0) * 100.0
 # ---  Save Results --- #
 arch = get(ENV, "ARCH_NAME", "Unknown")
-result_line = "$arch, $N, $n_workers, $threads_per_worker, $(round(elapsed_time, digits=4)), $(round(gflops, digits=2))\n"
+result_line = "$arch, $N, $n_workers, $threads_per_worker, $(round(elapsed_time, digits=4)), $(round(gflops, digits=2)), $(round(t_setup_h,digits=4)), $(round(t_setup_x,digits=4)),$(round(t_gather, digits=4)),$(round(min_comp, digits=4)), $(round(max_comp, digits=4)), $(round(imbalance_pct, digits=2)) \n"
 
 println("\nFinal Results: $result_line")
 

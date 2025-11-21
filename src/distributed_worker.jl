@@ -82,9 +82,9 @@ function worker_matmul()
     Y = WORKER_STORAGE[:Y]
 
     # Perform the multiplication
-    mul!(Y, H, X)
+    t_compute = @elapsed mul!(Y, H, X)
 
-    return nothing
+    return t_compute
 end
 
 function worker_get_diagonal()
