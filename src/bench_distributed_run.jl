@@ -42,6 +42,8 @@ println("Master: Generating sparse Hamiltonian matrix H of size $(N)x$(N)...")
 H_master = sprand(N, N, 0.01)
 H_master = H_master + H_master'  # Make it symmetric
 
+
+nnz_H = nnz(H_master)
 println("Master: Distributing H matrix to workers...")
 @everywhere procs() worker_init_H($H_master)
 
@@ -103,9 +105,9 @@ full_diagonal = reduce(vcat, diagonal_results)
 println("Master: Gathered full diagonal of result matrix with length $(length(full_diagonal)).")
 println("Master: Distributed computation finished successfully.")
 
-time = t_end - t_start
-@printf("Distributed MatMul Time: %.4f seconds\n", time)
-gflops = (2.0 * N^2) / (time * 1e9)
+elapsed_time = t_end - t_start
+@printf("Distributed MatMul Time: %.4f seconds\n", elapsed_time)
+gflops = (2.0 * nnz_H*N) / (elapsed_time* 1e9)
 @printf("Performance: %.2f GFLOPS\n", gflops)
 
 # ---  Save Results --- #
