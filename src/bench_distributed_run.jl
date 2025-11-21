@@ -126,9 +126,13 @@ result_line = "$arch, $N, $n_workers, $nodes, $threads_per_worker, $(round(elaps
 
 println("\nFinal Results: $result_line")
 
-open("../results/architecture_benchmark_results.csv", "a") do io
+filename = get(ENV, "RESULTS_FILE", "../results/architecture_benchmark_results.csv")
+
+open("../results/"*filename, "a") do io
     write(io, result_line)
 end
+
+
 
 # --- Clean Up Workers --- #
 println("\nMaster: Cleaning up worker storage...")

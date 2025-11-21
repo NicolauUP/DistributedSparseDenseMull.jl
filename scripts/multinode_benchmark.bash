@@ -14,7 +14,7 @@ mkdir -p "$LOGS_DIR"
 # --- Criação do CSV Header (Apenas se não existir) ---
 # Adicionamos a coluna 'NODES' para análise multi-nodo
 # Create CsV Header if it does not exist
-if [ ! -f "../results/architecture_benchmark_results.csv" ]; then
+if [ ! -f "../results/architecture_benchmark_results_multinode.csv" ]; then
     echo "Architecture,N,Workers,Nodes,Threads,Time(s),GFlops,Time Setup H(s),Time Setup X(s),Time Gather(s),Min Compute Time(s),Max Compute Time(s),Pct Imbalance (%)" > ../results/architecture_benchmark_results_multinode.csv
 fi
 
