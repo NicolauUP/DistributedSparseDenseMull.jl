@@ -61,16 +61,16 @@ EOT
 # --- Battery of tests
 
 # 1. Bus Saturation
-submit_job 32 2 
+submit_hybrid_benchmark 32 2 
 
 # 2. Theoretical maximum 
-submit_job 8 8 
+submit_hybrid_benchmark 8 8 
 
 # 3. Middle Ground
-submit_job 16 4
+submit_hybrid_benchmark 16 4
 
 # 4. Fat 
-submit_job 4 16
+submit_hybrid_benchmark 4 16
 
 # 5. Limit (pure threading)
-submit_job 1 64
+submit_hybrid_benchmark 1 64
