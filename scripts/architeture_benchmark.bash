@@ -5,11 +5,11 @@ export ARCH_NAME="AMD_EPYC_7742"
 
 # Create CsV Header if it does not exist
 if [ ! -f "../results/architecture_benchmark_results.csv" ]; then
-    echo "Architecture, N, Workers, Threads, Time(s), GFlops" > ../results/architecture_benchmark_results.csv
+    echo "Architecture, N, Workers, Threads, Time(s), GFlops, Time Setup H (s), Time Setup X (s), Time Gather (s), Min Compute Time (s), Max Compute Time(s), Pct Imbalance (%)" > ../results/architecture_benchmark_results.csv
 fi
 
 # --- First Teste: Pure MPI --- #
-for WORKERS in 8 16 32 64; do 
+for WORKERS in 4 8 16 32 64; do 
     TASKS=$((WORKERS + 1)) # +1 for master
     echo "Submitting architecture benchmark (Pure MPI) with $WORKERS workers and matrix size $BENCH_N x $BENCH_N"
 
