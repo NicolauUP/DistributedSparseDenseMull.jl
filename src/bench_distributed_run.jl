@@ -24,7 +24,7 @@ end
 n_workers = nworkers()
 println("BENCHMARK : N = $N, Workers = $n_workers, Threads per worker = $threads_per_worker")
 
-@everywhere worker() begin
+@everywhere workers() begin
     ENV["JULIA_WORKER_THREADS"] = $threads_per_worker
 end
 
