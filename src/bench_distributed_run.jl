@@ -36,7 +36,7 @@ end
 
 # --- B Create Hamiltonian Matrix H --- #
 
-N = 50000
+
 
 println("Master: Generating sparse Hamiltonian matrix H of size $(N)x$(N)...")
 H_master = sprand(N, N, 0.01)

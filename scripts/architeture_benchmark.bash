@@ -23,7 +23,7 @@ for WORKERS in 8 16 32 64; do
 #SBATCH --time=02:00:00
 #SBATCH --partition=normal-x86
 #SBATCH -A f202409396cpcaa2x   
-#SBATCH --mem=60G
+#SBATCH --mem=128G
 
 julia --project=../. ../src/bench_distributed_run.jl 
 EOT
@@ -51,7 +51,7 @@ submit_hybrid_benchmark() {
 #SBATCH --time=02:00:00
 #SBATCH --partition=normal-x86
 #SBATCH -A f202409396cpcaa2x   
-#SBATCH --mem=60G
+#SBATCH --mem=128G
 
 export SLURM_CPUS_PER_TASK=${THREADS}
 julia --project=../. ../src/bench_distributed_run.jl 
