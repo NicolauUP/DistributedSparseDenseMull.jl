@@ -53,6 +53,10 @@ submit_hybrid_benchmark() {
 #SBATCH -A f202409396cpcaa2x   
 #SBATCH --mem=128G
 
+
+export OMP_PROC_BIND=close
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
 export SLURM_CPUS_PER_TASK=${THREADS}
 julia --project=../. ../src/bench_distributed_run.jl 
 EOT
