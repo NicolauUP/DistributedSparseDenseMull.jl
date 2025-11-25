@@ -56,9 +56,9 @@ for (i,pid) in enumerate(workers_list)
     #Ensure the last worker gets any remaining rows
     end_idx = (i == num_workers) ? N : i * slab_size
 
-    col_range = start_idx:end_idx 
+    col_range = start_idx:end_idx
     remotecall_wait(worker_allocate_slabs, pid, N, col_range)
-end 
+end
 
 println("Master: Slabs distributed to all workers.")
 
