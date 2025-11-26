@@ -2,5 +2,7 @@
 *.jld2
 .DS_Store
 Notes/*
-Notebooks/*
+notebooks/*
 results/*
+figures/*
+logs/*
