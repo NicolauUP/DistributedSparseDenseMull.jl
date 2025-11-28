@@ -16,4 +16,4 @@ numactl --show
 echo "---------------------"
 
 
-julia --project=../. ../src/mpi_transposed/mul_benchmark.jl -O3 
+julia  -O3 --check-bounds=no --project=../. ../src/mpi_transposed/mul_benchmark.jl 
