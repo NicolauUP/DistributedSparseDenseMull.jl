@@ -16,7 +16,7 @@ end
 #--- 1. FORCE THREAD PINNING ---
 println("--- THREAD PINNING SETUP ---")
 pinthreads(:cores)
-threadinfo()
+threadinfo(;slurm=true)
 println("-----------------------------")
 
 # --- 1. Configuration (EPYC scale) ---
