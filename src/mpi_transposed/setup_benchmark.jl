@@ -3,6 +3,7 @@ using SparseArrays
 using Random
 using Base.Threads
 using InteractiveUtils
+using ThreadPinning
 
 function threaded_fill!(X::Matrix{Float64}, value::Float64)
     @threads for j in 1:size(X, 2)
@@ -12,6 +13,11 @@ function threaded_fill!(X::Matrix{Float64}, value::Float64)
     end
 end
 
+#--- 1. FORCE THREAD PINNING ---
+println("--- THREAD PINNING SETUP ---")
+pinthreads(:cores)
+threadinfo()
+println("-----------------------------")
 
 # --- 1. Configuration (EPYC scale) ---
 # WE set N = M for a square dense matrix

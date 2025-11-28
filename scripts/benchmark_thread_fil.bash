@@ -11,7 +11,6 @@
 #SBATCH -A f202409396cpcaa2x   
 
 export JULIA_NUM_THREADS=128
-export JULIA_EXCLUSIVE=1
 echo "--- NUMA Topology ---"
 numactl --show
 echo "---------------------"
