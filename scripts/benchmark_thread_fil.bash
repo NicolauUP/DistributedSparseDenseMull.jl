@@ -16,4 +16,4 @@ numactl --show
 echo "---------------------"
 
 
-julia --project=../. ../src/mpi_transposed/setup_benchmark.jl -O3 
+julia --project=../. ../src/mpi_transposed/mul_benchmark.jl -O3 
