@@ -52,7 +52,7 @@ function transposed_spmm!(Y::Matrix{Float64}, H::SparseMatrixCSC{Float64,Int}, X
 
     local_width = size(X, 1)
 
-    @threads :dynamic for r in 1:H.n
+    @threads :static for r in 1:H.n
         for i in H.colptr[r]:H.colptr[r+1]-1
             c = H.rowval[i]
             v = H.nzval[i]
