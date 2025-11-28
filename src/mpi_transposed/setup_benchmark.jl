@@ -6,7 +6,7 @@ using InteractiveUtils
 using ThreadPinning
 
 function threaded_fill!(X::Matrix{Float64}, value::Float64)
-    @threads for j in 1:size(X, 2)
+    @threads :static for j in 1:size(X, 2)
         @simd for i in 1:size(X,1)
             @inbounds X[i,j] = value
         end
