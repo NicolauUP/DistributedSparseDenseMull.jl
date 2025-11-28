@@ -36,7 +36,7 @@ function transposed_spmm!(Y::Matrix{Float64}, H::SparseMatrixCSC{Float64,Int}, X
             c = H.rowval[i]
             v = H.nzval[i]
             @turbo for k in 1:local_width
-                @inbounds Y[k,r] += v * X[k,r]
+                @inbounds Y[k,r] += v * X[k,c]
             end
         end
     end
@@ -103,18 +103,15 @@ t_end = time()
 avg_time = (t_end - t_start) / ITER
 nnz_H = nnz(H_transposed)
 
-total_flops = 2.0 * nnz_H * N # 2 * nnz(H) * N
+total_flops = 2 * nnz_H * M
 gflops = (total_flops / avg_time) / 1e9
-println("Total operations: $(round(total_flops/1e9, digits=2)) GFLOPs")
-bytes_moved = (nnz_H * M * 8.0) + (2.0 * N * M * 8.0)
-eff_bw = (bytes_moved / avg_time) / 1e9
 
 println("\n--- RESULTS ---")
 println("Avg Time:   $(round(avg_time, digits=4)) s")
 println("Throughput: $(round(gflops, digits=2)) GFLOPS")
 println("Eff. BW:    $(round(eff_bw, digits=2)) GB/s (Approx)")
 
-if gflops > 50
+if gflops > 200
     println("\n🚀 STATUS: Working. Scaling to Cluster enabled.")
 else
     println("\n⚠️ STATUS: Low performance. Check Vectorization.")
