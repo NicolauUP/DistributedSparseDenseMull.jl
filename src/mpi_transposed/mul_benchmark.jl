@@ -75,7 +75,7 @@ println("-----------------------------")
 # WE set N = M for a square dense matrix
 const N = 1_000_000
 const M = 5_000
-const BANDWIDTH = 2 # density of the sparse matrix, ~15 nonzeros per row
+const BANDWIDTH = 15 # density of the sparse matrix, ~15 nonzeros per row
 const GB_PER_MATRIX = (N * M * 8) / (1024^3) # size of one dense matrix in GB
 
 
