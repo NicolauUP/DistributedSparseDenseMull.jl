@@ -1,7 +1,7 @@
 using LinearAlgebra, SparseArrays, LoopVectorization, Base.Threads, Printf, Random, ThreadPinning
 
 # --- CONFIG ---
-const N = 1_000_000
+const N = 50_000
 const M = 128           # The "Problematic" Batch Size
 const TEST_BW = 50      # Physics-like Bandwidth
 
