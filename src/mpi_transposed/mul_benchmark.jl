@@ -99,7 +99,7 @@ println("Dense matrices initialized.")
 println("\n --- SETUP PHASE - Sparse Matrix ---")
 H_logical = banded_sparse(N, BANDWIDTH)
 H_logical = H_logical + H_logical' # make it symmetric
-println("Sparse matrix H initialized with density $(round(DENSITY*100, digits=4))%.")
+
 # Transpose H for the transposed SpMM
 H_transposed = sparse(transpose(H_logical)) 
 
