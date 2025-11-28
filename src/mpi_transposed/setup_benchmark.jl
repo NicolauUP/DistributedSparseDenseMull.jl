@@ -72,7 +72,7 @@ bw_steady = GB_PER_MATRIX / t_rewrite
 
 println("\n--- RESULTS ---")
 println("First Touch Time: $(round(time_write, digits=4)) seconds")
-println("First Touch BW: $(round(bw, digits=2)) GB/s")
+println("First Touch BW: $(round(bw_first, digits=2)) GB/s")
 println("---")
 println("Steady State Rewrite Time: $(round(t_rewrite, digits=4)) seconds")
 println("Steady State Rewrite BW: $(round(bw_steady, digits=2)) GB/s")
