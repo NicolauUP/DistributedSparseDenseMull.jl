@@ -6,6 +6,7 @@ const M = 128           # The "Problematic" Batch Size
 const TEST_BW = 50      # Physics-like Bandwidth
 
 println("--- DEBUG RUN (N=$N, M=$M) ---")
+flush(stdout)
 pinthreads(:cores)
 
 # --- SETUP ---
@@ -33,11 +34,13 @@ Y_phys = zeros(M, N)
 GC.gc()
 
 println("Setup Complete. Starting Diagnostics...")
+flush(stdout)
 
 # --- TEST 1: SERIAL KERNEL (Single Core Baseline) ---
 # If this is fast, the problem is Threading/MPI.
 # If this is slow, the problem is the Kernel/Vectorization.
 println("\n[1/3] TEST 1: Single Thread Performance...")
+flush(stdout)
 
 function serial_kernel!(Y, H, X)
     local_width = size(X, 1)
@@ -58,6 +61,7 @@ serial_kernel!(Y_phys, H_store, X_phys) # Warmup
 t_serial = @elapsed serial_kernel!(Y_phys, H_store, X_phys)
 flops_serial = (2.0 * nnz(H_store) * M) / t_serial / 1e9
 println("   Time: $(round(t_serial, digits=4)) s | GFLOPS: $(round(flops_serial, digits=2))")
+flush(stdout)
 
 
 # --- TEST 2: THREADED + NO TURBO (Isolate Vectorizer) ---
@@ -82,11 +86,13 @@ simd_kernel!(Y_phys, H_store, X_phys) # Warmup
 t_simd = @elapsed simd_kernel!(Y_phys, H_store, X_phys)
 flops_simd = (2.0 * nnz(H_store) * M) / t_simd / 1e9
 println("   Time: $(round(t_simd, digits=4)) s | GFLOPS: $(round(flops_simd, digits=2))")
+flush(stdout)
 
 
 # --- TEST 3: THREADED + TURBO (The Problem?) ---
 # We retry the original code to confirm the bug.
 println("\n[3/3] TEST 3: Threaded @turbo (Original)...")
+flush(stdout)
 
 function turbo_kernel!(Y, H, X)
     local_width = size(X, 1)
@@ -106,3 +112,6 @@ turbo_kernel!(Y_phys, H_store, X_phys) # Warmup
 t_turbo = @elapsed turbo_kernel!(Y_phys, H_store, X_phys)
 flops_turbo = (2.0 * nnz(H_store) * M) / t_turbo / 1e9
 println("   Time: $(round(t_turbo, digits=4)) s | GFLOPS: $(round(flops_turbo, digits=2))")
+flush(stdout)
+println("\n--- DIAGNOSTICS COMPLETE ---")
+flush(stdout)
