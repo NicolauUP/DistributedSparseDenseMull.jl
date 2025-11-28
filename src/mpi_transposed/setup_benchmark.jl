@@ -15,8 +15,8 @@ end
 
 # --- 1. Configuration (EPYC scale) ---
 # WE set N = M for a square dense matrix
-const N = 20_000
-const M = 20_000
+const N = 50_000
+const M = 50_000
 const DENSITY = 15.0/N # density of the sparse matrix, ~15 nonzeros per row
 const GB_PER_MATRIX = (N * M * 8) / (1024^3) # size of one dense matrix in GB
 
@@ -60,19 +60,28 @@ time_write = @elapsed begin
     threaded_fill!(X_phys, 0.0)
 end
 
-bw = GB_PER_MATRIX / time_write
+# 4. Benchmark (Rewrite - Steady State)
+# We run it AGAIN to see pure bandwidth without OS Page Fault overhead
+println("      Running Rewrite (Steady State)...")
+t_rewrite = @elapsed begin
+    threaded_fill!(X_phys, 2.0)
+end
+
+bw_first = GB_PER_MATRIX / time_write
+bw_steady = GB_PER_MATRIX / t_rewrite
 
 println("\n--- RESULTS ---")
-println("Time: $(round(time_write, digits=4)) seconds")
-println("Bandwidth: $(round(bw, digits=2)) GB/s")
+println("First Touch Time: $(round(time_write, digits=4)) seconds")
+println("First Touch BW: $(round(bw, digits=2)) GB/s")
+println("---")
+println("Steady State Rewrite Time: $(round(t_rewrite, digits=4)) seconds")
+println("Steady State Rewrite BW: $(round(bw_steady, digits=2)) GB/s")
 
 # --- 4. Verification ---
-if bw > 250
+if bw_steady > 250
     println("\n SUCESS: Excellent NUMA saturation detected! ")
-elseif bw > 150
+elseif bw_steady > 150
     println("\n SUCCESS: Good NUMA saturation detected. ")
-elseif bw > 100
-    println("\n WARNING: Moderate NUMA saturation detected. Consider tuning your environment. ")
 else
     println("\n FAILURE: Poor NUMA saturation detected! Please check your system configuration. ")
 end
