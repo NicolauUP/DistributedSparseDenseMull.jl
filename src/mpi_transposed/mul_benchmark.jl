@@ -52,8 +52,8 @@ println("-----------------------------")
 
 # --- 1. Configuration (EPYC scale) ---
 # WE set N = M for a square dense matrix
-const N = 150_000
-const M = 150_000
+const N = 100_000_0
+const M = 5_000
 const DENSITY = 15.0/N # density of the sparse matrix, ~15 nonzeros per row
 const GB_PER_MATRIX = (N * M * 8) / (1024^3) # size of one dense matrix in GB
 
@@ -105,7 +105,7 @@ nnz_H = nnz(H_transposed)
 
 total_flops = 2.0 * nnz_H * N # 2 * nnz(H) * N
 gflops = (total_flops / avg_time) / 1e9
-
+println("Total operations: $(round(total_flops/1e9, digits=2)) GFLOPs")
 bytes_moved = (nnz_H * M * 8.0) + (2.0 * N * M * 8.0)
 eff_bw = (bytes_moved / avg_time) / 1e9
 
