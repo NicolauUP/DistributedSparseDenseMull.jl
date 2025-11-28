@@ -106,6 +106,10 @@ nnz_H = nnz(H_transposed)
 total_flops = 2 * nnz_H * M
 gflops = (total_flops / avg_time) / 1e9
 
+bytes_moved = (nnz_H. * M * 8.0) + (2.0 * N * M * 8.0) # Approximate bytes moved
+eff_bw = (bytes_moved / avg_time) / 1e9 # in GB
+
+
 println("\n--- RESULTS ---")
 println("Avg Time:   $(round(avg_time, digits=4)) s")
 println("Throughput: $(round(gflops, digits=2)) GFLOPS")
