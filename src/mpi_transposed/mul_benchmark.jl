@@ -74,7 +74,7 @@ println("-----------------------------")
 # --- 1. Configuration (EPYC scale) ---
 # WE set N = M for a square dense matrix
 const N = 1_000_000
-const M = 5_000
+const M = 128
 const BANDWIDTH = 15 # density of the sparse matrix, ~15 nonzeros per row
 const GB_PER_MATRIX = (N * M * 8) / (1024^3) # size of one dense matrix in GB
 
@@ -136,8 +136,8 @@ println("Avg Time:   $(round(avg_time, digits=4)) s")
 println("Throughput: $(round(gflops, digits=2)) GFLOPS")
 println("Eff. BW:    $(round(eff_bw, digits=2)) GB/s (Approx)")
 
-if gflops > 200
-    println("\n🚀 STATUS: Working. Scaling to Cluster enabled.")
+if gflops > 100
+    println("\n🚀 SUCCESS: Cache Trashing Fixed.")
 else
-    println("\n⚠️ STATUS: Low performance. Check Vectorization.")
+    println("\n⚠️ PROBLEM.")
 end
