@@ -15,8 +15,8 @@ end
 
 # --- 1. Configuration (EPYC scale) ---
 # WE set N = M for a square dense matrix
-const N = 50_000
-const M = 50_000
+const N = 70_000
+const M = 70_000
 const DENSITY = 15.0/N # density of the sparse matrix, ~15 nonzeros per row
 const GB_PER_MATRIX = (N * M * 8) / (1024^3) # size of one dense matrix in GB
 
