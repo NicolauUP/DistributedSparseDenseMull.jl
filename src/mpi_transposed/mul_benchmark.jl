@@ -13,7 +13,7 @@ function banded_sparse(N::Int, bandwidth::Int)
     cols = Vector{Int}(undef, 0); sizehint!(cols, est_nnz)
     vals = Vector{Float64}(undef, 0); sizehint!(vals, est_nnz)
     for i in 1:N
-        for j in 0:div(bandwidth,2)-1
+        for j in 0:div(bandwidth,2)
             col = i + j
             if col <= N
                 push!(rows, i)
@@ -75,7 +75,7 @@ println("-----------------------------")
 # WE set N = M for a square dense matrix
 const N = 1_000_000
 const M = 5_000
-const BANDWIDTH = 15 # density of the sparse matrix, ~15 nonzeros per row
+const BANDWIDTH = 2 # density of the sparse matrix, ~15 nonzeros per row
 const GB_PER_MATRIX = (N * M * 8) / (1024^3) # size of one dense matrix in GB
 
 
