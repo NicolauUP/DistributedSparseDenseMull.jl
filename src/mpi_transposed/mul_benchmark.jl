@@ -106,7 +106,7 @@ nnz_H = nnz(H_transposed)
 total_flops = 2.0 * nnz_H * N # 2 * nnz(H) * N
 gflops = (total_flops / avg_time) / 1e9
 
-bytes_moved = (nnz_count * M * 8.0) + (2.0 * N * M * 8.0)
+bytes_moved = (nnz_H * M * 8.0) + (2.0 * N * M * 8.0)
 eff_bw = (bytes_moved / avg_time) / 1e9
 
 println("\n--- RESULTS ---")
