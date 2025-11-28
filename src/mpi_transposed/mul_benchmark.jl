@@ -6,6 +6,27 @@ using InteractiveUtils
 using ThreadPinning
 using LoopVectorization
 
+function banded_sparse(N::Int, bandwidth::Int)
+
+    est_nnz = N * bandwidth
+    rows = Vector{Int}(undef, 0); sizehint!(rows, est_nnz)
+    cols = Vector{Int}(undef, 0); sizehint!(cols, est_nnz)
+    vals = Vector{Float64}(undef, 0); sizehint!(vals, est_nnz)
+    for i in 1:N
+        for j in 0:div(bandwidth,2)-1
+            col = i + j
+            if col <= N
+                push!(rows, i)
+                push!(cols, col) 
+                push!(vals, rand())
+            end
+        end
+    end
+    H_upper = sparse(rows, cols, vals, N, N)
+    return H_upper + H_upper'
+end
+
+
 function threaded_fill!(X::Matrix{Float64}, value::Float64)
     @threads :static for j in 1:size(X, 2)
         @simd for i in 1:size(X,1)
@@ -54,7 +75,7 @@ println("-----------------------------")
 # WE set N = M for a square dense matrix
 const N = 100_000_0
 const M = 5_000
-const DENSITY = 15.0/N # density of the sparse matrix, ~15 nonzeros per row
+const BANDWIDTH = 15 # density of the sparse matrix, ~15 nonzeros per row
 const GB_PER_MATRIX = (N * M * 8) / (1024^3) # size of one dense matrix in GB
 
 
@@ -76,7 +97,7 @@ GC.gc()
 println("Dense matrices initialized.")
 # --- 2. Configuration - Sparse Matrix ---
 println("\n --- SETUP PHASE - Sparse Matrix ---")
-H_logical = sprand(N, N, DENSITY)
+H_logical = banded_sparse(N, BANDWIDTH)
 H_logical = H_logical + H_logical' # make it symmetric
 println("Sparse matrix H initialized with density $(round(DENSITY*100, digits=4))%.")
 # Transpose H for the transposed SpMM
