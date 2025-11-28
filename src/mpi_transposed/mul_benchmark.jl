@@ -56,7 +56,7 @@ function transposed_spmm!(Y::Matrix{Float64}, H::SparseMatrixCSC{Float64,Int}, X
         for i in H.colptr[r]:H.colptr[r+1]-1
             c = H.rowval[i]
             v = H.nzval[i]
-            @turbo for k in 1:local_width
+            @simd for k in 1:local_width
                 @inbounds Y[k,r] += v * X[k,c]
             end
         end
